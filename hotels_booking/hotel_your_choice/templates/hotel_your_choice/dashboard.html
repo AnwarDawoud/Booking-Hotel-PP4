@@ -1,0 +1,12 @@
+<!-- hotel_your_choice/templates/hotel_your_choice/dashboard.html -->
+
+<h1>Your Bookings</h1>
+
+{% for booking in bookings %}
+<div>
+    <h2>{{ booking.hotel.name }}</h2>
+    <p>Check-in: {{ booking.check_in }}</p>
+    <p>Check-out: {{ booking.check_out }}</p>
+    <p>Guests: {{ booking.guests }}</p>
+</div>
+{% endfor %}
