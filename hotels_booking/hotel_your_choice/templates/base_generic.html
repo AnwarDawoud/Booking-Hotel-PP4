@@ -3,21 +3,60 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Hotel Your Choice{% endblock %}</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Your custom CSS styles go here -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token }}">
+        <link rel="stylesheet" type="text/css" href="{% static 'hotel_your_choice_css/style.css' %}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <title>{% block title %}Hotel Booking{% endblock %}</title>
+    </head>
 
-<body>
-    <header class="bg-primary text-white text-center py-4">
-        <h1 class="display-4">Hotel Your Choice</h1>
-    </header>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'hotel_your_choice:view_hotels' %}">View Hotels</a></li>
+                    {% if user.is_authenticated %}
+                    {% if user.is_hotel_manager %}
+                    <li><a href="{% url 'hotel_your_choice:hotel_manager_dashboard' %}">Hotel Manager Dashboard</a></li>
+                    <li><a href="{% url 'hotel_your_choice:add_hotel' %}">Add Hotel</a></li>
+                    <li><a href="{% url 'hotel_your_choice:manage_bookings' %}">Manage Bookings</a></li>
+                    <li><a href="{% url 'hotel_your_choice:unsubscribe' %}">Unsubscribe</a></li>
+                    <!-- Unsubscribe for Hotel Manager -->
+                    {% elif user.is_client_user %}
+                    <li><a href="{% url 'hotel_your_choice:book_hotel' hotel_id=1 %}">Book Hotel</a></li>
+                    <li><a href="{% url 'hotel_your_choice:client_dashboard' %}">Client Dashboard</a></li>
+                    <li><a href="{% url 'hotel_your_choice:unsubscribe' %}">Unsubscribe</a></li>
+                    <!-- Unsubscribe for Client User -->
+                    {% elif user.is_administrator %}
+                    <li><a href="{% url 'hotel_your_choice:system_overview' %}">System Overview</a></li>
+                    <li><a href="{% url 'hotel_your_choice:manage_users' %}">Manage Users</a></li>
+                    <li><a href="{% url 'hotel_your_choice:troubleshoot' %}">Troubleshoot</a></li>
+                    {% endif %}
+                    <li>Welcome, {{ request.user.username }}!</li>
+                    <li><a href="{% url 'hotel_your_choice:logout' %}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url 'hotel_your_choice:login' %}">Login</a></li>
+                    <li><a href="{% url 'hotel_your_choice:register' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Your navigation links go here -->
+        </header>
+        <main>
+            {% block content %}
+
+
+
+            {% endblock %}
+        </main>
+        <footer>
+            <!-- Add your footer content here -->
+        </footer>
+
+    </body>
+
+</html>
